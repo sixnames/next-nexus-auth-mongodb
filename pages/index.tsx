@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { initializeApollo } from '../apollo/apolloClient';
-import { MY_QUERY } from '../graphql/myQuery';
-import { useMyQuery } from '../generated/apolloComponents';
+import { useInitialQuery } from '../generated/apolloComponents';
+import { INITIAL_QUERY } from '../graphql/initialQuery';
 
 export default function Home() {
-  const { data, loading, error } = useMyQuery();
+  const { data, loading, error } = useInitialQuery();
 
   if (error) {
     return <div>error</div>;
@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <div>
       <h1>Hello</h1>
-      <h2>{data?.name}</h2>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
@@ -25,7 +25,7 @@ export default function Home() {
 export async function getStaticProps() {
   const apolloClient = initializeApollo();
   await apolloClient.query({
-    query: MY_QUERY,
+    query: INITIAL_QUERY,
   });
 
   return {

@@ -13,47 +13,59 @@ export type Scalars = {
   Float: number;
 };
 
-export type Query = {
-  __typename?: 'Query';
+export type User = {
+  __typename?: 'User';
+  id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
 };
 
-export type MyQueryVariables = Exact<{ [key: string]: never; }>;
+export type Query = {
+  __typename?: 'Query';
+  getUser?: Maybe<User>;
+};
+
+export type InitialQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MyQuery = (
+export type InitialQuery = (
   { __typename?: 'Query' }
-  & Pick<Query, 'name'>
+  & { getUser?: Maybe<(
+    { __typename?: 'User' }
+    & Pick<User, 'id' | 'name'>
+  )> }
 );
 
 
-export const MyDocument = gql`
-    query My {
-  name
+export const InitialDocument = gql`
+    query Initial {
+  getUser {
+    id
+    name
+  }
 }
     `;
 
 /**
- * __useMyQuery__
+ * __useInitialQuery__
  *
- * To run a query within a React component, call `useMyQuery` and pass it any options that fit your needs.
- * When your component renders, `useMyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useInitialQuery` and pass it any options that fit your needs.
+ * When your component renders, `useInitialQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useMyQuery({
+ * const { data, loading, error } = useInitialQuery({
  *   variables: {
  *   },
  * });
  */
-export function useMyQuery(baseOptions?: Apollo.QueryHookOptions<MyQuery, MyQueryVariables>) {
-        return Apollo.useQuery<MyQuery, MyQueryVariables>(MyDocument, baseOptions);
+export function useInitialQuery(baseOptions?: Apollo.QueryHookOptions<InitialQuery, InitialQueryVariables>) {
+        return Apollo.useQuery<InitialQuery, InitialQueryVariables>(InitialDocument, baseOptions);
       }
-export function useMyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MyQuery, MyQueryVariables>) {
-          return Apollo.useLazyQuery<MyQuery, MyQueryVariables>(MyDocument, baseOptions);
+export function useInitialLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<InitialQuery, InitialQueryVariables>) {
+          return Apollo.useLazyQuery<InitialQuery, InitialQueryVariables>(InitialDocument, baseOptions);
         }
-export type MyQueryHookResult = ReturnType<typeof useMyQuery>;
-export type MyLazyQueryHookResult = ReturnType<typeof useMyLazyQuery>;
-export type MyQueryResult = Apollo.QueryResult<MyQuery, MyQueryVariables>;
+export type InitialQueryHookResult = ReturnType<typeof useInitialQuery>;
+export type InitialLazyQueryHookResult = ReturnType<typeof useInitialLazyQuery>;
+export type InitialQueryResult = Apollo.QueryResult<InitialQuery, InitialQueryVariables>;
