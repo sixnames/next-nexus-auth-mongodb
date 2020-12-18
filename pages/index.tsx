@@ -1,15 +1,10 @@
 import * as React from 'react';
-import { gql, useQuery } from '@apollo/client';
 import { initializeApollo } from '../apollo/apolloClient';
-
-const MyQuery = gql`
-  query MyQuery {
-    name
-  }
-`;
+import { MY_QUERY } from '../graphql/myQuery';
+import { useMyQuery } from '../generated/apolloComponents';
 
 export default function Home() {
-  const { data, loading, error } = useQuery(MyQuery);
+  const { data, loading, error } = useMyQuery();
 
   if (error) {
     return <div>error</div>;
@@ -30,7 +25,7 @@ export default function Home() {
 export async function getStaticProps() {
   const apolloClient = initializeApollo();
   await apolloClient.query({
-    query: MyQuery,
+    query: MY_QUERY,
   });
 
   return {
