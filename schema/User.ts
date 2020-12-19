@@ -1,4 +1,6 @@
 import { objectType, queryType } from 'nexus';
+import { getDatabase } from '../db/mongodb';
+import { getSession } from 'next-auth/client';
 
 export const User = objectType({
   name: 'User',
@@ -12,10 +14,18 @@ export const UserQuery = queryType({
   definition(t) {
     t.field('getUser', {
       type: 'User',
-      resolve: () => {
+      resolve: async (_source, _args, context) => {
+        // Get session user
+        const session = await getSession(context);
+
+        // Get session user from db
+        const db = await getDatabase();
+        const collection = db.collection('users');
+        const user = await collection.findOne({ email: session?.user?.email });
+
         return {
-          id: 1,
-          name: 'User name',
+          id: user._id.toString(),
+          name: user.name,
         };
       },
     });
