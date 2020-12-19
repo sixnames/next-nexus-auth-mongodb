@@ -3,12 +3,12 @@ import { useMemo } from 'react';
 
 let apolloClient: ApolloClient<NormalizedCacheObject>;
 
-function createIsomorphicLInk() {
+function createIsomorphicLInk(ctx?: any) {
   if (typeof window === 'undefined') {
     // on server
     const { SchemaLink } = require('@apollo/client/link/schema');
     const { schema } = require('../schema/index');
-    return new SchemaLink({ schema });
+    return new SchemaLink({ schema, context: ctx });
   } else {
     // on client
     const { createUploadLink } = require('apollo-upload-client');
@@ -19,16 +19,16 @@ function createIsomorphicLInk() {
   }
 }
 
-function createApolloClient() {
+function createApolloClient(ctx?: any) {
   return new ApolloClient({
     ssrMode: typeof window === 'undefined',
     cache: new InMemoryCache(),
-    link: createIsomorphicLInk(),
+    link: createIsomorphicLInk(ctx),
   });
 }
 
-export function initializeApollo(initialState: NormalizedCacheObject | null = null) {
-  const _apolloClient = apolloClient ?? createApolloClient();
+export function initializeApollo(initialState: NormalizedCacheObject | null = null, ctx?: any) {
+  const _apolloClient = apolloClient ?? createApolloClient(ctx);
 
   if (initialState) {
     _apolloClient.cache.restore(initialState);
