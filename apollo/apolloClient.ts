@@ -7,7 +7,7 @@ function createIsomorphicLInk(ctx?: any) {
   if (typeof window === 'undefined') {
     // on server
     const { SchemaLink } = require('@apollo/client/link/schema');
-    const { schema } = require('../schema/index');
+    const { schema } = require('../schema/schema');
     return new SchemaLink({ schema, context: ctx });
   } else {
     // on client
