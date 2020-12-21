@@ -6,5 +6,12 @@ export interface BaseModel {
 
 export interface UserModel extends BaseModel {
   name: string;
+  lastName: string;
   email: string;
+  password: string;
+}
+
+export interface SessionUser extends Pick<UserModel, 'email' | 'name' | 'lastName'> {
+  id: string;
+  image?: string | null;
 }
