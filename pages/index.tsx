@@ -8,7 +8,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const Home = () => {
-  const { asPath, locales } = useRouter();
+  const { locales } = useRouter();
   const [session] = useSession();
   const { data, loading, error } = useInitialQuery();
 
@@ -48,7 +48,7 @@ const Home = () => {
         return (
           <div key={locale}>
             <br />
-            <Link locale={locale} href={asPath}>
+            <Link locale={locale} href={'/'}>
               <a>{locale}</a>
             </Link>
           </div>
