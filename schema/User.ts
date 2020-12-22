@@ -19,7 +19,7 @@ export const UserQuery = queryType({
       resolve: async (_source, _args, context) => {
         // Get session user
         const session = await getSession(context);
-
+        console.log(session?.user);
         if (!session?.user) {
           return null;
         }

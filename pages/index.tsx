@@ -4,8 +4,11 @@ import { useInitialQuery } from '../generated/apolloComponents';
 import { INITIAL_QUERY } from '../graphql/initialQuery';
 import { signIn, signOut, useSession } from 'next-auth/client';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 const Home = () => {
+  const { asPath, locales } = useRouter();
   const [session] = useSession();
   const { data, loading, error } = useInitialQuery();
 
@@ -18,7 +21,7 @@ const Home = () => {
   }
 
   return (
-    <>
+    <React.Fragment>
       {!session && (
         <React.Fragment>
           <h1>Not signed in</h1>
@@ -34,7 +37,17 @@ const Home = () => {
           <button onClick={() => signOut()}>Sign out</button>
         </React.Fragment>
       )}
-    </>
+      {(locales || []).map((locale) => {
+        return (
+          <div key={locale}>
+            <br />
+            <Link locale={locale} href={asPath}>
+              <a>{locale}</a>
+            </Link>
+          </div>
+        );
+      })}
+    </React.Fragment>
   );
 };
 

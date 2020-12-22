@@ -2,40 +2,39 @@ import NextAuth, { InitOptions } from 'next-auth';
 import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDatabase } from '../../../db/mongodb';
-import { SessionUser } from '../../../lib/data-types';
-import { getUserFromId, updateUser } from '../../../db/user-dao';
+import { ObjectId } from 'mongodb';
+import { SessionUser } from '../../../db/dbModels';
 
 const options: InitOptions = {
-  // Configure one or more authentication providers
+  database: process.env.MONGO_URL,
+  session: {
+    jwt: true,
+  },
+
   providers: [
     Providers.Credentials({
-      // The name to display on the sign in form (e.g. 'Sign in with...')
       name: 'Credentials',
-      // The credentials is used to generate a suitable form on the sign in page.
-      // You can specify whatever fields you are expecting to be submitted.
-      // e.g. domain, username, password, 2FA token, etc.
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'smith' },
+        username: { label: 'Email', type: 'email', placeholder: 'email' },
         password: { label: 'Password', type: 'password' },
       },
       authorize: async (credentials: Record<string, any>) => {
         try {
           const db = await getDatabase();
           const collection = db.collection('users');
-          const user = await collection.findOne({ email: credentials.username });
+          const user = await collection.findOne(
+            { email: credentials.username },
+            { projection: { password: 0 } },
+          );
+
           if (user) {
             const sessionUser = {
               ...user,
               id: user._id.toString(),
             };
-            // Any object returned will be saved in `user` property of the JWT
             return Promise.resolve(sessionUser);
           } else {
-            // If you return null or false then the credentials will be rejected
             return Promise.resolve(null);
-            // You can also Reject this callback with an Error or with a URL:
-            // return Promise.reject(new Error('error message')) // Redirect to error page
-            // return Promise.reject('/path/to/redirect')        // Redirect to a URL
           }
         } catch (e) {
           console.log(e);
@@ -45,20 +44,14 @@ const options: InitOptions = {
     }),
   ],
 
-  session: {
-    jwt: true,
-  },
-
-  // A database is optional, but required to persist accounts in a database
-  database: process.env.MONGO_URL,
-
   callbacks: {
     async session(session, user: any) {
       const sessionUser: SessionUser = {
         ...session.user,
         id: user.id,
-        username: user.username,
-        role: user.role,
+        lastName: user.lastName,
+        email: user.email,
+        name: user.name,
       };
 
       return Promise.resolve({
@@ -66,21 +59,20 @@ const options: InitOptions = {
         user: sessionUser,
       });
     },
-    async jwt(token, user: any, _account, profile) {
+    async jwt(token, user: any, _account, _profile) {
       let response = token;
 
       if (user?.id) {
-        let dbUser = await getUserFromId(user.id);
+        const db = await getDatabase();
+        const dbUser = await db.collection('users').findOne({ _id: new ObjectId(user?.id) });
 
-        if (!dbUser.username && profile.login) {
-          dbUser = await updateUser(user.id, { username: profile.login });
+        if (!dbUser) {
+          throw new Error('No user found');
         }
 
         response = {
           ...token,
           id: user?.id,
-          username: dbUser.username,
-          role: dbUser.role,
         };
       }
 
