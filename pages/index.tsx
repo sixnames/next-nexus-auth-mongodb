@@ -37,6 +37,13 @@ const Home = () => {
           <button onClick={() => signOut()}>Sign out</button>
         </React.Fragment>
       )}
+
+      <br />
+      <Link href={'/about'}>
+        <a>About</a>
+      </Link>
+      <br />
+
       {(locales || []).map((locale) => {
         return (
           <div key={locale}>
