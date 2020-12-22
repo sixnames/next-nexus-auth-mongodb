@@ -3,6 +3,7 @@ import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDatabase } from '../../../db/mongodb';
 import bcrypt from 'bcryptjs';
+import { UserModel } from '../../../db/dbModels';
 
 const options: InitOptions = {
   database: process.env.MONGO_URL,
@@ -21,10 +22,10 @@ const options: InitOptions = {
         try {
           const db = await getDatabase();
           const collection = db.collection('users');
-          const user = await collection.findOne({ email: credentials.username });
+          const user = await collection.findOne<UserModel>({ email: credentials.username });
 
           if (user) {
-            const passwordResult = await bcrypt.compare(credentials.password, `${user?.password}`);
+            const passwordResult = await bcrypt.compare(credentials.password, `${user.password}`);
 
             if (!passwordResult) {
               return Promise.resolve(null);

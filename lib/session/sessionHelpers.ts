@@ -12,6 +12,15 @@ export const getSessionUser = async (context: any): Promise<UserModel | null> =>
   // Get session user from db
   const db = await getDatabase();
   const collection = db.collection('users');
+  /*await collection.findOneAndUpdate(
+    { email: session.user.email },
+    {
+      $set: {
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    },
+  );*/
   return collection.findOne<UserModel>(
     { email: session.user.email },
     { projection: { password: 0 } },

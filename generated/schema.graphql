@@ -2,12 +2,17 @@
 ### Do not make changes to this file directly
 
 
+"""Date custom scalar type"""
+scalar Date
+
 type Query {
   me: User
 }
 
 type User {
+  createdAt: Date!
   email: String
   id: ID
   name: String
+  updatedAt: Date!
 }

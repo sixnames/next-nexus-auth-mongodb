@@ -7,6 +7,8 @@ export const User = objectType({
     t.id('id');
     t.string('name');
     t.string('email');
+    t.nonNull.date('createdAt');
+    t.nonNull.date('updatedAt');
   },
 });
 

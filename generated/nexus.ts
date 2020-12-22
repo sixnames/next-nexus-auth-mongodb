@@ -4,9 +4,23 @@
  */
 
 import * as dbModels from "./../db/dbModels"
-
-
-
+import { core } from "nexus"
+declare global {
+  interface NexusGenCustomInputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+  }
+}
+declare global {
+  interface NexusGenCustomOutputMethods<TypeName extends string> {
+    /**
+     * Date custom scalar type
+     */
+    date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+  }
+}
 
 
 declare global {
@@ -25,6 +39,7 @@ export interface NexusGenScalars {
   Float: number
   Boolean: boolean
   ID: string
+  Date: any
 }
 
 export interface NexusGenObjects {
@@ -47,9 +62,11 @@ export interface NexusGenFieldTypes {
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
+    createdAt: NexusGenScalars['Date']; // Date!
     email: string | null; // String
     id: string | null; // ID
     name: string | null; // String
+    updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
 
@@ -58,9 +75,11 @@ export interface NexusGenFieldTypeNames {
     me: 'User'
   }
   User: { // field return type name
+    createdAt: 'Date'
     email: 'String'
     id: 'ID'
     name: 'String'
+    updatedAt: 'Date'
   }
 }
 
