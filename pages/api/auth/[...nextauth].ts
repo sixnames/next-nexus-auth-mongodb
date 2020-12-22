@@ -2,8 +2,7 @@ import NextAuth, { InitOptions } from 'next-auth';
 import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getDatabase } from '../../../db/mongodb';
-import { ObjectId } from 'mongodb';
-import { SessionUser } from '../../../db/dbModels';
+import bcrypt from 'bcryptjs';
 
 const options: InitOptions = {
   database: process.env.MONGO_URL,
@@ -22,17 +21,19 @@ const options: InitOptions = {
         try {
           const db = await getDatabase();
           const collection = db.collection('users');
-          const user = await collection.findOne(
-            { email: credentials.username },
-            { projection: { password: 0 } },
-          );
+          const user = await collection.findOne({ email: credentials.username });
 
           if (user) {
-            const sessionUser = {
-              ...user,
-              id: user._id.toString(),
-            };
-            return Promise.resolve(sessionUser);
+            const passwordResult = await bcrypt.compare(credentials.password, `${user?.password}`);
+
+            if (!passwordResult) {
+              return Promise.resolve(null);
+            }
+
+            return Promise.resolve({
+              name: user.name,
+              email: user.email,
+            });
           } else {
             return Promise.resolve(null);
           }
@@ -43,42 +44,6 @@ const options: InitOptions = {
       },
     }),
   ],
-
-  callbacks: {
-    async session(session, user: any) {
-      const sessionUser: SessionUser = {
-        ...session.user,
-        id: user.id,
-        lastName: user.lastName,
-        email: user.email,
-        name: user.name,
-      };
-
-      return Promise.resolve({
-        ...session,
-        user: sessionUser,
-      });
-    },
-    async jwt(token, user: any, _account, _profile) {
-      let response = token;
-
-      if (user?.id) {
-        const db = await getDatabase();
-        const dbUser = await db.collection('users').findOne({ _id: new ObjectId(user?.id) });
-
-        if (!dbUser) {
-          throw new Error('No user found');
-        }
-
-        response = {
-          ...token,
-          id: user?.id,
-        };
-      }
-
-      return Promise.resolve(response);
-    },
-  },
 };
 
 export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, options);

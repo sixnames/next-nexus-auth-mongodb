@@ -1,7 +1,7 @@
 ## Getting Started
 - [ ] Custom scalars (ObjectId, Date) 
 - [x] Internationalized Routing
-- [ ] User password
+- [x] User password
 - [ ] ObjectId scalar
 - [ ] Nexus context type
-- [ ] Session user type
+- [x] Session user type

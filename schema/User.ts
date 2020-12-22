@@ -1,7 +1,5 @@
 import { objectType, queryType } from 'nexus';
-import { getDatabase } from '../db/mongodb';
-import { getSession } from 'next-auth/client';
-import { UserModel } from '../db/dbModels';
+import { getSessionUser } from '../lib/session/sessionHelpers';
 
 export const User = objectType({
   name: 'User',
@@ -14,25 +12,16 @@ export const User = objectType({
 
 export const UserQuery = queryType({
   definition(t) {
-    t.nullable.field('getUser', {
+    t.nullable.field('me', {
       type: User,
       resolve: async (_source, _args, context) => {
-        // Get session user
-        const session = await getSession(context);
-        console.log(session?.user);
-        if (!session?.user) {
-          return null;
-        }
-
-        // Get session user from db
-        const db = await getDatabase();
-        const collection = db.collection('users');
-        const user = await collection.findOne<UserModel>({ email: session.user.email });
+        const user = await getSessionUser(context);
 
         if (!user) {
           return null;
         }
 
+        // TODO _id: ObjectId
         return {
           ...user,
           id: user._id.toString(),

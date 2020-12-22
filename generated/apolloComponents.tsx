@@ -17,11 +17,12 @@ export type User = {
   __typename?: 'User';
   id?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
+  email?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
-  getUser?: Maybe<User>;
+  me?: Maybe<User>;
 };
 
 export type InitialQueryVariables = Exact<{ [key: string]: never; }>;
@@ -29,18 +30,19 @@ export type InitialQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type InitialQuery = (
   { __typename?: 'Query' }
-  & { getUser?: Maybe<(
+  & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name'>
+    & Pick<User, 'id' | 'name' | 'email'>
   )> }
 );
 
 
 export const InitialDocument = gql`
     query Initial {
-  getUser {
+  me {
     id
     name
+    email
   }
 }
     `;

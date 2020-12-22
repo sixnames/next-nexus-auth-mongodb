@@ -2,14 +2,13 @@ import * as React from 'react';
 import { initializeApollo } from '../apollo/apolloClient';
 import { useInitialQuery } from '../generated/apolloComponents';
 import { INITIAL_QUERY } from '../graphql/initialQuery';
-import { signIn, signOut, useSession } from 'next-auth/client';
+import { signIn, signOut } from 'next-auth/client';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 
 const Home = () => {
-  const { locales } = useRouter();
-  const [session] = useSession();
+  const { locales, locale } = useRouter();
   const { data, loading, error } = useInitialQuery();
 
   if (error) {
@@ -20,34 +19,43 @@ const Home = () => {
     return <div>loading...</div>;
   }
 
+  if (!data) {
+    return <div>Error in useInitialQuery</div>;
+  }
+
+  const { me } = data;
+
   return (
     <React.Fragment>
-      {!session && (
+      {!me ? (
         <React.Fragment>
           <h1>Not signed in</h1>
-          <button onClick={() => signIn()}>Sign in</button>
+          <div>
+            <button onClick={() => signIn('Credentials')}>Sign in</button>
+          </div>
         </React.Fragment>
-      )}
-      {session && (
+      ) : (
         <React.Fragment>
           <h1>Hello</h1>
-          <h2>Signed in as {session.user.email}</h2>
+          <h2>Signed in as {me.email}</h2>
           <h3>User from DB: </h3>
           <pre>{JSON.stringify(data, null, 2)}</pre>
           <button onClick={() => signOut()}>Sign out</button>
         </React.Fragment>
       )}
 
-      <br />
+      <h3>Nav</h3>
       <Link href={'/about'}>
         <a>About</a>
       </Link>
-      <br />
 
+      <h3>Current locale</h3>
+      <div>{locale}</div>
+
+      <h3>All locales</h3>
       {(locales || []).map((locale) => {
         return (
           <div key={locale}>
-            <br />
             <Link locale={locale} href={'/'}>
               <a>{locale}</a>
             </Link>

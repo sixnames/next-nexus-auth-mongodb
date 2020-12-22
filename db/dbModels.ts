@@ -10,8 +10,3 @@ export interface UserModel extends BaseModel {
   email: string;
   password: string;
 }
-
-export interface SessionUser extends Pick<UserModel, 'email' | 'name' | 'lastName'> {
-  id: string;
-  image?: string | null;
-}
