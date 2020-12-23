@@ -19,4 +19,9 @@ export const schema = makeSchema({
       },
     ],
   },
+  contextType: {
+    module: path.join(process.cwd(), 'types', 'context.ts'),
+    export: 'NexusContext',
+  },
+  prettierConfig: path.join(process.cwd(), '.prettierrc'),
 });

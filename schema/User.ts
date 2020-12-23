@@ -1,5 +1,7 @@
 import { arg, nonNull, objectType, queryType } from 'nexus';
 import { getSessionUser } from '../lib/session/sessionHelpers';
+import { getDatabase } from '../db/mongodb';
+import { UserModel } from '../db/dbModels';
 
 export const User = objectType({
   name: 'User',
@@ -17,6 +19,10 @@ export const UserQuery = queryType({
     t.nullable.field('me', {
       type: User,
       resolve: async (_source, _args, context) => {
+        // console.log(Object.keys(context.req.cookies));
+        console.log(Object.keys(context));
+        // console.log(context);
+
         const user = await getSessionUser(context);
 
         if (!user) {
@@ -36,14 +42,10 @@ export const UserQuery = queryType({
           }),
         ),
       },
-      resolve: async (_source, _args, context) => {
-        const user = await getSessionUser(context);
-
-        if (!user) {
-          return null;
-        }
-
-        return user;
+      resolve: async (_source, args) => {
+        const db = await getDatabase();
+        const collection = db.collection('users');
+        return collection.findOne<UserModel>({ _id: args.id });
       },
     });
   },
