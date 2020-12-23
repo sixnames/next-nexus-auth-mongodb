@@ -11,19 +11,36 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  /** The `Upload` scalar type represents a file upload. */
+  Upload: any;
+  /** Date custom scalar type */
+  Date: any;
+  /** Mongo object id scalar type */
+  ObjectId: any;
 };
+
 
 export type User = {
   __typename?: 'User';
-  id?: Maybe<Scalars['ID']>;
-  name?: Maybe<Scalars['String']>;
-  email?: Maybe<Scalars['String']>;
+  _id: Scalars['ObjectId'];
+  createdAt: Scalars['Date'];
+  updatedAt: Scalars['Date'];
+  name: Scalars['String'];
+  email: Scalars['String'];
 };
 
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<User>;
+  getUser?: Maybe<User>;
 };
+
+
+export type QueryGetUserArgs = {
+  id: Scalars['ObjectId'];
+};
+
+
 
 export type InitialQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -32,7 +49,7 @@ export type InitialQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'id' | 'name' | 'email'>
+    & Pick<User, '_id' | 'name' | 'email'>
   )> }
 );
 
@@ -40,7 +57,7 @@ export type InitialQuery = (
 export const InitialDocument = gql`
     query Initial {
   me {
-    id
+    _id
     name
     email
   }

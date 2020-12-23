@@ -8,17 +8,33 @@ import { core } from "nexus"
 declare global {
   interface NexusGenCustomInputMethods<TypeName extends string> {
     /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Upload";
+    /**
      * Date custom scalar type
      */
     date<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "Date";
+    /**
+     * Mongo object id scalar type
+     */
+    objectId<FieldName extends string>(fieldName: FieldName, opts?: core.CommonInputFieldConfig<TypeName, FieldName>): void // "ObjectId";
   }
 }
 declare global {
   interface NexusGenCustomOutputMethods<TypeName extends string> {
     /**
+     * The `Upload` scalar type represents a file upload.
+     */
+    upload<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Upload";
+    /**
      * Date custom scalar type
      */
     date<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "Date";
+    /**
+     * Mongo object id scalar type
+     */
+    objectId<FieldName extends string>(fieldName: FieldName, ...opts: core.ScalarOutSpread<TypeName, FieldName>): void // "ObjectId";
   }
 }
 
@@ -40,6 +56,8 @@ export interface NexusGenScalars {
   Boolean: boolean
   ID: string
   Date: any
+  ObjectId: any
+  Upload: any
 }
 
 export interface NexusGenObjects {
@@ -59,31 +77,38 @@ export type NexusGenAllTypes = NexusGenRootTypes & NexusGenScalars
 
 export interface NexusGenFieldTypes {
   Query: { // field return type
+    getUser: NexusGenRootTypes['User'] | null; // User
     me: NexusGenRootTypes['User'] | null; // User
   }
   User: { // field return type
+    _id: NexusGenScalars['ObjectId']; // ObjectId!
     createdAt: NexusGenScalars['Date']; // Date!
-    email: string | null; // String
-    id: string | null; // ID
-    name: string | null; // String
+    email: string; // String!
+    name: string; // String!
     updatedAt: NexusGenScalars['Date']; // Date!
   }
 }
 
 export interface NexusGenFieldTypeNames {
   Query: { // field return type name
+    getUser: 'User'
     me: 'User'
   }
   User: { // field return type name
+    _id: 'ObjectId'
     createdAt: 'Date'
     email: 'String'
-    id: 'ID'
     name: 'String'
     updatedAt: 'Date'
   }
 }
 
 export interface NexusGenArgTypes {
+  Query: {
+    getUser: { // args
+      id: NexusGenScalars['ObjectId']; // ObjectId!
+    }
+  }
 }
 
 export interface NexusGenAbstractTypeMembers {
