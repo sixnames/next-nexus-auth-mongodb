@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { initializeApollo } from '../apollo/apolloClient';
-import { useInitialQuery } from '../generated/apolloComponents';
-import { INITIAL_QUERY } from '../graphql/initialQuery';
+import { initializeApollo } from 'apollo/apolloClient';
+import { useInitialQuery } from 'generated/apolloComponents';
+import { INITIAL_QUERY } from 'graphql/initialQuery';
 import { signIn, signOut } from 'next-auth/client';
 import { GetServerSidePropsContext, GetServerSidePropsResult } from 'next';
 import { useRouter } from 'next/router';

@@ -33,6 +33,7 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "allowJs": false,
+    "baseUrl": "."
   },
   "include": [
     "next-env.d.ts",

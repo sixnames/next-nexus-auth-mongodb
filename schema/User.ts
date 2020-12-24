@@ -1,7 +1,7 @@
 import { arg, nonNull, objectType, queryType } from 'nexus';
-import { getSessionUser } from '../lib/session/sessionHelpers';
-import { getDatabase } from '../db/mongodb';
-import { UserModel } from '../db/dbModels';
+import { getSessionUser } from 'lib/session/sessionHelpers';
+import { getDatabase } from 'db/mongodb';
+import { UserModel } from 'db/dbModels';
 
 export const User = objectType({
   name: 'User',
