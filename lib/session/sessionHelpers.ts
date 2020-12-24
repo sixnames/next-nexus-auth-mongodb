@@ -18,3 +18,7 @@ export const getSessionUser = async (context: any): Promise<UserModel | null> =>
     { projection: { password: 0 } },
   );
 };
+
+export const getSessionLocale = (context: any): string => {
+  return context.locale || context.req.headers['content-language'] || 'ru';
+};

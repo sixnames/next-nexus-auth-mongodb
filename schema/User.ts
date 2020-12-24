@@ -19,10 +19,6 @@ export const UserQuery = queryType({
     t.nullable.field('me', {
       type: User,
       resolve: async (_source, _args, context) => {
-        // console.log(Object.keys(context.req.cookies));
-        console.log(Object.keys(context));
-        // console.log(context);
-
         const user = await getSessionUser(context);
 
         if (!user) {

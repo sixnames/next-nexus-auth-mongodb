@@ -4,4 +4,9 @@
 - [x] User password
 - [x] Nexus context type
 - [x] Session user type
-- [ ] client request locale
+- [x] client request locale
+- [ ] request city
+- [ ] reach ui menu button for locale select
+- [ ] api jest testing environment
+- [ ] client cypress testing environment
+- [ ] react i18n
