@@ -2,6 +2,7 @@ import { arg, nonNull, objectType, queryType } from 'nexus';
 import { getSessionUser } from 'lib/session/sessionHelpers';
 import { getDatabase } from 'db/mongodb';
 import { UserModel } from 'db/dbModels';
+import { COL_USERS } from 'db/collectionNames';
 
 export const User = objectType({
   name: 'User',
@@ -40,7 +41,7 @@ export const UserQuery = queryType({
       },
       resolve: async (_source, args) => {
         const db = await getDatabase();
-        const collection = db.collection('users');
+        const collection = db.collection(COL_USERS);
         return collection.findOne<UserModel>({ _id: args.id });
       },
     });

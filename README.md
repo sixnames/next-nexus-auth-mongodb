@@ -6,7 +6,8 @@
 - [x] Session user type
 - [x] client request locale
 - [x] request city
+- [x] docker compose dev db
+- [x] createInitialData 
 - [ ] reach ui menu button for locale select
-- [ ] react i18n
-- [ ] api jest testing environment
+- [ ] i18n with https://www.npmjs.com/package/next-rosetta
 - [ ] client cypress testing environment

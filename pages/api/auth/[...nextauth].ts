@@ -1,9 +1,10 @@
 import NextAuth, { InitOptions } from 'next-auth';
 import Providers from 'next-auth/providers';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getDatabase } from '../../../db/mongodb';
+import { getDatabase } from 'db/mongodb';
 import bcrypt from 'bcryptjs';
-import { UserModel } from '../../../db/dbModels';
+import { UserModel } from 'db/dbModels';
+import { COL_USERS } from 'db/collectionNames';
 
 const options: InitOptions = {
   database: process.env.MONGO_URL,
@@ -21,7 +22,7 @@ const options: InitOptions = {
       authorize: async (credentials: Record<string, any>) => {
         try {
           const db = await getDatabase();
-          const collection = db.collection('users');
+          const collection = db.collection(COL_USERS);
           const user = await collection.findOne<UserModel>({ email: credentials.username });
 
           if (user) {

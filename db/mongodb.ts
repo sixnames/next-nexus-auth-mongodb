@@ -6,15 +6,16 @@ let cachedDb: Db | undefined;
 
 // A function for connecting to MongoDB,
 // taking a single parameter of the connection string
-export async function getDatabase(uri = process.env.MONGO_URL): Promise<Db> {
+export async function getDatabase(): Promise<Db> {
   // If the database connection is cached,
   // use it instead of creating a new connection
   if (cachedDb) {
     return cachedDb;
   }
 
+  const uri = process.env.MONGO_URL;
   if (!uri) {
-    throw new Error('Unable to connect to database, no URI  provided');
+    throw new Error('Unable to connect to database, no URI provided');
   }
 
   // If no connection is cached, create a new one

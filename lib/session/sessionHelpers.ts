@@ -3,6 +3,7 @@ import { UserModel } from 'db/dbModels';
 import { getDatabase } from 'db/mongodb';
 import { DEFAULT_CITY, DEFAULT_LOCALE } from 'config/locales';
 import { NexusContext } from 'types/context';
+import { COL_USERS } from 'db/collectionNames';
 
 export const getSessionUser = async (context: any): Promise<UserModel | null> => {
   // Get session user
@@ -13,7 +14,7 @@ export const getSessionUser = async (context: any): Promise<UserModel | null> =>
 
   // Get session user from db
   const db = await getDatabase();
-  const collection = db.collection('users');
+  const collection = db.collection(COL_USERS);
 
   return collection.findOne<UserModel>(
     { email: session.user.email },
